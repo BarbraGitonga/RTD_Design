@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "ADC_SIGMA_DELTA_TI_ADS")(type "KiCad")(uri "${KIPRJMOD}/ADC_SIGMA_DELTA_TI_ADS.kicad_sym")(options "")(descr ""))
+)

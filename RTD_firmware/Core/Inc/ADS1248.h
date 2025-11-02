@@ -16,16 +16,12 @@
 #define B -5.775e-7
 #define C -4.183e-12
 
-typedef struct {
-	SPI_HandleTypeDef* hspi;
-	GPIO_TypeDef* GPIO_START;
-	uint16_t START_Pin;
-	GPIO_TypeDef* GPIO_CS;
-	uint16_t CS_Pin;
-} ADS;
 
-void ADS124X_init(ADS Pins);
-int32_t Temperature(ADS Pins);
+void ADS124X_init(SPI_HandleTypeDef *hspi,
+        GPIO_TypeDef *GPIO_START, uint16_t PIN_START,
+        GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS);
+int32_t Temperature(SPI_HandleTypeDef *hspi,
+        GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS);
 float RTD_Converter(int32_t result);
 
 #endif /* INC_ADS1248_H_ */

@@ -18,12 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <stm32f1xx_hal.h>
-#include "ADS1248.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stm32f1xx_hal.h>
+#include "ADS1248.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +46,8 @@ SPI_HandleTypeDef hspi1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint8_t drdy_flag = 0;
+float temp;
 
 /* USER CODE END PV */
 
@@ -61,6 +62,12 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if (GPIO_Pin == DRDY_Pin) {   // Your DRDY pin
+   drdy_flag = 1;
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -96,6 +103,15 @@ int main(void)
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  ADS124X_init(&hspi1, START_GPIO_Port, START_Pin, GPIOA, GPIO_PIN_14);
+
+  void RS485_SetTransmit(void) {
+      HAL_GPIO_WritePin(DE_GPIO_Port, DE_Pin, GPIO_PIN_SET); // TX enable
+  }
+
+  void RS485_SetReceive(void) {
+      HAL_GPIO_WritePin(RE_GPIO_Port, RE_Pin, GPIO_PIN_RESET); // RX enable
+  }
 
   /* USER CODE END 2 */
 
@@ -103,6 +119,19 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(drdy_flag == 1){
+		  temp = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
+		  uint8_t buffer[8];
+		  int len = sprintf((char*)buffer, "%0.2f\r\n", temp);
+
+		  RS485_SetTransmit();
+		  HAL_UART_Transmit(&huart2, buffer, len, HAL_MAX_DELAY);
+		  RS485_SetReceive();
+		  drdy_flag = 0;
+	  }
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

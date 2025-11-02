@@ -1,0 +1,9 @@
+../Core/Src/main.c:65:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/main.c:108:8:RS485_SetTransmit	16	static
+../Core/Src/main.c:78:5:main	32	static
+../Core/Src/main.c:112:8:RS485_SetReceive	16	static
+../Core/Src/main.c:146:6:SystemClock_Config	72	static
+../Core/Src/main.c:183:13:MX_SPI1_Init	8	static
+../Core/Src/main.c:221:13:MX_USART2_UART_Init	8	static
+../Core/Src/main.c:254:13:MX_GPIO_Init	40	static
+../Core/Src/main.c:303:6:Error_Handler	4	static,ignoring_inline_asm

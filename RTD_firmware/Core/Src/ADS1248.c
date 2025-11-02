@@ -39,6 +39,15 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
 	uint8_t wregData[] = {0x40, 0x03, 0x01, 0x00, 0x03, 0x42};
 	HAL_SPI_Transmit(hspi, wregData, sizeof(wregData), HAL_MAX_DELAY);
 
+	// Setting IDAC1 and IDAC2 to 1mA
+	uint8_t wregIDAC[] = {
+		0x4A,        // WREG starting at reg 0x0A
+		0x01,        // write 2 registers (0x0A and 0x0B)
+		0xC0,  		 // IDAC0 = 1 mA (bits 7-5 = 110)
+		0x98   		 // IDAC1 = IDAC1→AIN2 (100), IDAC2→AIN3 (011)
+	};
+	HAL_SPI_Transmit(hspi, wregIDAC, sizeof(wregIDAC), HAL_MAX_DELAY);
+
 	// Optional sanity check — RREG
 	uint8_t rregCmd[] = {0x20, 0x03};
 	uint8_t rregData[4];

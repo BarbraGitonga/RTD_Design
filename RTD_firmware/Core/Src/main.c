@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stm32f1xx_hal.h>
 #include "ADS1248.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

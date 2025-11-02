@@ -20,8 +20,10 @@
 void ADS124X_init(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_START, uint16_t PIN_START,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS);
-int32_t Temperature(SPI_HandleTypeDef *hspi,
+
+float Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS);
+
 float RTD_Converter(int32_t result);
 
 #endif /* INC_ADS1248_H_ */

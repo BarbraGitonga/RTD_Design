@@ -8,6 +8,16 @@
 #include "ADS1248.h"
 #include <math.h>
 
+/**
+ * @brief Initializes the ADC by setting up the PGA,
+ *      excitation current and read and write modes.
+ * 
+ * @param hspi  SPI handle
+ * @param GPIO_START  GPIO port for START pin
+ * @param PIN_START  GPIO pin for START pin
+ * @param GPIO_CS GPIO port for CS pin
+ * @param PIN_CS GPIO pin for CS pin
+ */
 void ADS124X_init(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_START, uint16_t PIN_START,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS) {
@@ -44,8 +54,16 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
 
 }
 
-float RTD_Converter(int32_t resistance){
+/**
+ * @brief Converts the resistance to temperature.
+ * 
+ * @param voltage value of voltage from resistance
+ * @return float 
+ */
+float RTD_Converter(int32_t voltage){
 	float temp;
+	float resistance;
+	resistance = (float)voltage / 10e-3; // calculate resistance in ohms
 
 	// Temperatures above 0 degrees using pt100
 	if((resistance >= pt100_R0) && (resistance <= 1000)){
@@ -63,8 +81,15 @@ float RTD_Converter(int32_t resistance){
 
 	return temp;
 }
-
-int32_t Temperature(SPI_HandleTypeDef *hspi,
+/**
+ * @brief Reads resistance from the RTD returns the temperature.
+ * 
+ * @param hspi SPI handle
+ * @param GPIO_CS CS port
+ * @param PIN_CS CS pin
+ * @return int32_t the temperature value
+ */
+float Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS){
 
 	int8_t data[3];

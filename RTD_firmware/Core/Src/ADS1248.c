@@ -69,9 +69,9 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
  * @param voltage value of voltage from resistance
  * @return float 
  */
-float RTD_Converter(int32_t voltage){
-	float temp;
-	float resistance;
+int32_t RTD_Converter(int32_t voltage){
+	int32_t temp;
+	int32_t resistance;
 	resistance = (float)voltage / 10e-3; // calculate resistance in ohms
 
 	// Temperatures above 0 degrees using pt100
@@ -79,7 +79,7 @@ float RTD_Converter(int32_t voltage){
 		temp = (-A + sqrt((A * A) -(4 * B) *(1 - (resistance / pt100_R0)))) / (2 * B);
 	}
 
-	// Temperatures above 0 degrees using pt100
+	// Temperatures above 0 degrees using pt1000
 	else if(resistance >= pt1000_R0){
 		temp = (-A + sqrt((A * A) -(4 * B) *(1 - (resistance / pt1000_R0)))) / (2 * B);
 	}
@@ -98,7 +98,7 @@ float RTD_Converter(int32_t voltage){
  * @param PIN_CS CS pin
  * @return int32_t the temperature value
  */
-float Temperature(SPI_HandleTypeDef *hspi,
+int32_t Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS){
 
 	int8_t data[3];

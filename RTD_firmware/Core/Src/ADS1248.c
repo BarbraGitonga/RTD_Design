@@ -90,14 +90,7 @@ int32_t RTD_Converter(int32_t voltage){
 
 	return temp;
 }
-/**
- * @brief Reads resistance from the RTD returns the temperature.
- * 
- * @param hspi SPI handle
- * @param GPIO_CS CS port
- * @param PIN_CS CS pin
- * @return int32_t the temperature value
- */
+
 int32_t Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS){
 

@@ -14,7 +14,6 @@
 #define pt1000_R0 1000.0
 #define A  3.9083e-3
 #define B -5.775e-7
-#define C -4.183e-12
 
 
 void ADS124X_init(SPI_HandleTypeDef *hspi,

@@ -69,10 +69,10 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
  * @param voltage value of voltage from resistance
  * @return float 
  */
-int32_t RTD_Converter(int32_t voltage){
+int32_t RTD_Converter(int32_t R_rtd){
 	int32_t temp;
 	int32_t resistance;
-	resistance = (float)voltage / 10e-3; // calculate resistance in ohms
+	resistance = (float)R_rtd / 10e-3; // calculate resistance in ohms
 
 	// Temperatures above 0 degrees using pt100
 	if((resistance >= pt100_R0) && (resistance <= 1000)){
@@ -95,7 +95,10 @@ int32_t Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS){
 
 	int8_t data[3];
-	int32_t resistance;
+	int32_t code;
+	float Gain = 16;
+	float R_ref = 1000.0f;
+	float R_rtd;
 	float temperature;
 
 	HAL_GPIO_WritePin(GPIO_CS, PIN_CS, GPIO_PIN_RESET);
@@ -109,11 +112,17 @@ int32_t Temperature(SPI_HandleTypeDef *hspi,
 	HAL_GPIO_WritePin(GPIO_CS, PIN_CS, GPIO_PIN_SET);
 
 	// Convert to integer (MSB)
-	resistance = ((int32_t)data[0] << 16) | ((int32_t)data[1] << 8) | data[2];
-	if (resistance & 0x800000) {
-		resistance |= 0xFF000000;
+	code = ((int32_t)data[0] << 16) | ((int32_t)data[1] << 8) | data[2]; // shifting data to occupy 42 bits
+
+	// sign extension. check if MSB is 1, if 1 add -ve sign
+	if (code & 0x800000) {
+		code |= 0xFF000000; // sets all upper bits of 32 bits to 1. -ve value
 
 	}
-	temperature = RTD_Converter(resistance);
+
+	// Calculate resistance from the output of the ADC
+	R_rtd = R_ref * ((float)code / (Gain * (pow(2, 23))));
+
+	temperature = RTD_Converter(R_rtd);
 	return temperature;
 }

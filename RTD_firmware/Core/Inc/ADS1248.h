@@ -12,7 +12,7 @@
 
 #define pt100_R0 100.0
 #define pt1000_R0 1000.0
-#define A  3.850e-3
+#define A  3.908e-3
 #define B -5.775e-7
 
 

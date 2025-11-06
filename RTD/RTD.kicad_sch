@@ -4680,7 +4680,7 @@
 		)
 		(uuid "79704cce-4769-409d-8172-245521a156e3")
 	)
-	(text "LP filter for the reference. fc = 402.58Hz"
+	(text "LP filter for the reference. fc = 406.31Hz"
 		(exclude_from_sim no)
 		(at 43.18 66.04 0)
 		(effects
@@ -4741,7 +4741,7 @@
 		)
 		(uuid "c26979c1-1786-4522-9874-35f1abdb4aa1")
 	)
-	(text "LP Filter for the RTD input: fc = 404.14Hz"
+	(text "LP Filter for the RTD input: fc = 404.15Hz"
 		(exclude_from_sim no)
 		(at 44.45 43.18 0)
 		(effects
@@ -6287,6 +6287,26 @@
 		)
 		(uuid "0a4411e6-a98a-4327-8810-f078e4a5c7db")
 	)
+	(label "Lead 3"
+		(at 39.37 54.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "208111e3-e8c1-45ba-b0e2-8ab17cf55989")
+	)
+	(label "Lead 4"
+		(at 39.37 59.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "65dd4ba7-87e2-469e-838f-603a06102d54")
+	)
 	(label "-24V"
 		(at 62.23 139.7 270)
 		(effects
@@ -6296,6 +6316,16 @@
 			(justify right bottom)
 		)
 		(uuid "68185e22-5934-416b-9d14-012d51bcf806")
+	)
+	(label "Lead 2"
+		(at 39.37 52.07 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6cce65e1-13fd-4cfa-9df1-6ec536bad289")
 	)
 	(label "B"
 		(at 130.81 130.81 0)
@@ -6317,6 +6347,16 @@
 			(justify left bottom)
 		)
 		(uuid "9097337f-118c-4710-86e1-c0b863260b3e")
+	)
+	(label "Lead 1"
+		(at 38.1 40.64 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9e42d457-ae23-4e88-943f-3c91eb456961")
 	)
 	(label "BOOT0"
 		(at 214.63 46.99 0)
@@ -7056,8 +7096,8 @@
 				)
 			)
 		)
-		(property "Value" "5.49k"
-			(at 48.26 69.85 90)
+		(property "Value" "5.11k"
+			(at 48.768 70.358 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10228,7 +10268,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "1.65k"
 			(at 41.91 77.47 0)
 			(effects
 				(font
@@ -10838,7 +10878,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "c3b84eb2-f56a-474f-9255-bd42d5719047")
-		(property "Reference" "5.49k1"
+		(property "Reference" "R_1"
 			(at 48.26 83.82 90)
 			(effects
 				(font
@@ -10846,7 +10886,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "5.11k"
 			(at 48.26 78.74 90)
 			(effects
 				(font
@@ -10889,7 +10929,7 @@
 		(instances
 			(project "RTD"
 				(path "/b0f0ce8f-6820-44a1-a501-600cf997055b"
-					(reference "5.49k1")
+					(reference "R_1")
 					(unit 1)
 				)
 			)

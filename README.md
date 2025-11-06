@@ -3,7 +3,7 @@ This holds schematics for a kicad design of a an RTD module for a 4-wire pt100 a
 
 ## Folder Structure
 
-1. Docs - holds the datasheets and reference materials used.
+1. Docs - holds the challenge, datasheets and reference materials used.
 2. RTD - holds the kicad files for the schematics for the PCB.
 3. RTD_firmware - holds the stm32 driver that carries out the conversion from resistance to digital.
 
@@ -11,4 +11,4 @@ This holds schematics for a kicad design of a an RTD module for a 4-wire pt100 a
 
 ![alt text](flowchart.webp)
 
-this is the means of achieving the projects goals.
+This is the means of achieving the projects goals.

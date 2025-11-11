@@ -67,12 +67,10 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
  * @brief Converts the resistance to temperature.
  * 
  * @param voltage value of voltage from resistance
- * @return float 
+ * @return int32_t the value of the temperature
  */
-int32_t RTD_Converter(int32_t R_rtd){
+int32_t RTD_Converter(int32_t resistance){
 	int32_t temp;
-	int32_t resistance;
-	resistance = (float)R_rtd / 10e-3; // calculate resistance in ohms
 
 	// Temperatures above 0 degrees using pt100
 	if((resistance >= pt100_R0) && (resistance <= 1000)){
@@ -121,7 +119,7 @@ int32_t Temperature(SPI_HandleTypeDef *hspi,
 	}
 
 	// Calculate resistance from the output of the ADC
-	R_rtd = R_ref * ((float)code / (Gain * (pow(2, 23))));
+	R_rtd = R_ref * (code / (Gain * (pow(2, 23))));
 
 	temperature = RTD_Converter(R_rtd);
 	return temperature;

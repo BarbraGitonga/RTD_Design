@@ -1,3 +1,3 @@
-../Core/Src/ADS1248.c:11:6:ADS124X_init	1
-../Core/Src/ADS1248.c:47:7:RTD_Converter	4
-../Core/Src/ADS1248.c:67:9:Temperature	2
+../Core/Src/ADS1248.c:21:6:ADS124X_init	1
+../Core/Src/ADS1248.c:72:9:RTD_Converter	4
+../Core/Src/ADS1248.c:92:9:Temperature	2

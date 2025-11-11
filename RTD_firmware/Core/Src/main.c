@@ -24,6 +24,7 @@
 #include <stm32f1xx_hal.h>
 #include "ADS1248.h"
 #include <stdio.h>
+#include "modbus.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +34,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define SLAVE_ADDR 0x01 // This is the address that will be used to identify the STM32 as a slave
+#define MB_RX_BUF_SIZE 256
+#define MB_TX_BUF_SIZE 256
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,9 +48,14 @@
 SPI_HandleTypeDef hspi1;
 
 UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
 uint8_t drdy_flag = 0;
+volatile uint16_t modbus_rx_len = 0;
+uint8_t mb_rx_buffer[MB_RX_BUF_SIZE];
+uint8_t mb_tx_buffer[MB_TX_BUF_SIZE];
+uint16_t modbusInputRegisters[2];
 float temp;
 
 /* USER CODE END PV */
@@ -55,6 +63,7 @@ float temp;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
@@ -68,6 +77,36 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == DRDY_Pin) {   // Your DRDY pin
    drdy_flag = 1;
   }
+}
+
+void RS485_SetTransmit(void) {
+  HAL_GPIO_WritePin(DE_GPIO_Port, DE_Pin, GPIO_PIN_SET); // TX enable
+}
+
+void RS485_SetReceive(void) {
+  HAL_GPIO_WritePin(RE_GPIO_Port, RE_Pin, GPIO_PIN_RESET); // RX enable
+}
+
+void HAL_UART_IDLE_Callback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART2) {
+        __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+
+        // Stop DMA to freeze NDTR count
+        HAL_UART_DMAStop(&huart2);
+
+        // Calculate number of bytes received
+        modbus_rx_len = MB_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(huart->hdmarx);
+
+        // Process the Modbus frame
+        ProcessModbusFrame(&huart2, mb_rx_buffer, modbus_rx_len, mb_tx_buffer, modbusInputRegisters);
+    	RS485_SetTransmit();
+		HAL_UART_Transmit(huart, mb_tx_buffer, 7, HAL_MAX_DELAY);
+		RS485_SetReceive();
+        // Restart DMA reception for the next frame
+        modbus_rx_len = 0;
+        HAL_UART_Receive_DMA(&huart2, mb_rx_buffer, MB_RX_BUF_SIZE);
+    }
 }
 
 /* USER CODE END 0 */
@@ -101,18 +140,17 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   ADS124X_init(&hspi1, START_GPIO_Port, START_Pin, GPIOA, GPIO_PIN_14);
 
-  void RS485_SetTransmit(void) {
-      HAL_GPIO_WritePin(DE_GPIO_Port, DE_Pin, GPIO_PIN_SET); // TX enable
-  }
+  // Start DMA reception
+  HAL_UART_Receive_DMA(&huart2, mb_rx_buffer, MB_RX_BUF_SIZE);
 
-  void RS485_SetReceive(void) {
-      HAL_GPIO_WritePin(RE_GPIO_Port, RE_Pin, GPIO_PIN_RESET); // RX enable
-  }
+  //enable IDLE line detection interrupt
+  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
 
   /* USER CODE END 2 */
 
@@ -121,18 +159,9 @@ int main(void)
   while (1)
   {
 	  if(drdy_flag == 1){
-		  temp = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
-		  uint8_t buffer[8];
-		  int len = sprintf((char*)buffer, "%0.2f\r\n", temp);
-
-		  RS485_SetTransmit();
-		  HAL_UART_Transmit(&huart2, buffer, len, HAL_MAX_DELAY);
-		  RS485_SetReceive();
+		  modbusInputRegisters[0] = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
 		  drdy_flag = 0;
 	  }
-
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -198,7 +227,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
   hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
@@ -248,6 +277,22 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -267,6 +312,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(START_GPIO_Port, START_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, RESET_Pin|RE_Pin|DE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : START_Pin */
@@ -275,6 +323,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(START_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CS_Pin */
+  GPIO_InitStruct.Pin = CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DRDY_Pin */
   GPIO_InitStruct.Pin = DRDY_Pin;
@@ -288,6 +343,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

@@ -1,5 +1,7 @@
 "./Core/Src/ADS1248.o"
 "./Core/Src/main.o"
+"./Core/Src/modbus.o"
+"./Core/Src/modbus_crc.o"
 "./Core/Src/stm32f1xx_hal_msp.o"
 "./Core/Src/stm32f1xx_it.o"
 "./Core/Src/syscalls.o"

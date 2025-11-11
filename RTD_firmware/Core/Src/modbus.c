@@ -27,9 +27,12 @@ uint8_t ProcessModbusFrame(uint8_t *rx, uint16_t len, uint8_t *response, uint16_
 	uint16_t crcCalc = Modbus_CRC16(rx, len-2);
 	uint16_t crcRecv = (rx[len - 1] << 8) | rx[len - 2];
 
+	if (crcCalc != crcRecv){
+		return ILLEGAL_DATA_VALUE;
+	}
 	// Handle "Read Input registers" (0x04)
-	if((rx[0] == SLAVE_ADDR) && (rx[1] == 0x04) && (crcCalc == crcRecv)) {
-		uint16_t temp_val = mb_input_reg[1];
+	if((rx[0] == SLAVE_ADDR) && (rx[1] == 0x04)) {
+		uint16_t temp_val = mb_input_reg[0];
 
 		response[0] = SLAVE_ADDR;
 		response[1] = 0x04; // function code

@@ -34,7 +34,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SLAVE_ADDR 0x01 // This is the address that will be used to identify the STM32 as a slave
 #define MB_RX_BUF_SIZE 256
 #define MB_TX_BUF_SIZE 256
 /* USER CODE END PD */
@@ -52,10 +51,12 @@ DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
 uint8_t drdy_flag = 0;
+uint8_t transfer_complete = 0;
 volatile uint16_t modbus_rx_len = 0;
 uint8_t mb_rx_buffer[MB_RX_BUF_SIZE];
 uint8_t mb_tx_buffer[MB_TX_BUF_SIZE];
 uint16_t modbusInputRegisters[2];
+uint8_t status;
 float temp;
 
 /* USER CODE END PV */
@@ -92,20 +93,11 @@ void HAL_UART_IDLE_Callback(UART_HandleTypeDef *huart)
     if (huart->Instance == USART2) {
         __HAL_UART_CLEAR_IDLEFLAG(&huart2);
 
-        // Stop DMA to freeze NDTR count
-        HAL_UART_DMAStop(&huart2);
-
         // Calculate number of bytes received
         modbus_rx_len = MB_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(huart->hdmarx);
-
-        // Process the Modbus frame
-        ProcessModbusFrame(&huart2, mb_rx_buffer, modbus_rx_len, mb_tx_buffer, modbusInputRegisters);
-    	RS485_SetTransmit();
-		HAL_UART_Transmit(huart, mb_tx_buffer, 7, HAL_MAX_DELAY);
-		RS485_SetReceive();
-        // Restart DMA reception for the next frame
-        modbus_rx_len = 0;
-        HAL_UART_Receive_DMA(&huart2, mb_rx_buffer, MB_RX_BUF_SIZE);
+        // Stop DMA to freeze NDTR count
+        HAL_UART_DMAStop(&huart2);
+        transfer_complete = 1;
     }
 }
 
@@ -161,6 +153,29 @@ int main(void)
 	  if(drdy_flag == 1){
 		  modbusInputRegisters[0] = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
 		  drdy_flag = 0;
+	  }
+
+	  if(transfer_complete){
+		  // Process the Modbus frame
+		  status = ProcessModbusFrame(mb_rx_buffer, modbus_rx_len, mb_tx_buffer, modbusInputRegisters);
+		  if (status != 0){
+			  Modbus_SendException(mb_rx_buffer[1], mb_tx_buffer, status);
+
+			  RS485_SetTransmit();
+			  HAL_Delay(1);  // small delay (~1ms)
+			  HAL_UART_Transmit(&huart2, mb_tx_buffer, 5, HAL_MAX_DELAY);
+			  RS485_SetReceive();
+		  }
+		  else {
+			  RS485_SetTransmit();
+			  HAL_Delay(1);  // small delay (~1ms)
+			  HAL_UART_Transmit(&huart2, mb_tx_buffer, 7, HAL_MAX_DELAY);
+			  RS485_SetReceive();
+		  }
+		  // Restart DMA reception for the next frame
+		  modbus_rx_len = 0;
+		  transfer_complete = 0;
+		  HAL_UART_Receive_DMA(&huart2, mb_rx_buffer, MB_RX_BUF_SIZE);
 	  }
     /* USER CODE END WHILE */
 

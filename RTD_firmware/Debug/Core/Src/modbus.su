@@ -1,1 +1,2 @@
-../Core/Src/modbus.c:11:6:ProcessModbusFrame	32	static
+../Core/Src/modbus.c:11:9:ProcessModbusFrame	32	static
+../Core/Src/modbus.c:46:6:Modbus_SendException	24	static

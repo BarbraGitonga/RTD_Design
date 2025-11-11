@@ -12,13 +12,19 @@
 
 #define SLAVE_ADDR			   0x01 // This is the slave ID of the device
 
-#define ILLEGAL_FUNCTION       0x10
-#define ILLEGAL_DATA_ADDRESS   0x11
-#define ILLEGAL_DATA_VALUE     0x12
+#define ILLEGAL_FUNCTION       0x01
+#define ILLEGAL_DATA_ADDRESS   0x02
+#define ILLEGAL_DATA_VALUE     0x03
+#define SLAVE_DEVICE_FALIURE   0x04
 
+enum {
+	REG_TEMP = 0,
+	REG_FAULT,
+	REG_COUNT
+};
 void RS485_SetTransmit(void);
 void RS485_SetReceive(void);
-void ProcessModbusFrame(UART_HandleTypeDef *huart, uint8_t *rx, uint16_t len, uint8_t *response, uint16_t* mb_input_reg);
-void sendData(UART_HandleTypeDef huart, uint8_t *data, int size);
+uint8_t ProcessModbusFrame(uint8_t *rx, uint16_t len, uint8_t *response, uint16_t* mb_input_reg);
+void Modbus_SendException(uint8_t function, uint8_t *response, uint8_t exceptionCode);
 
 #endif /* INC_MODBUS_H_ */

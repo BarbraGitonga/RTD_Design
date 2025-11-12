@@ -69,8 +69,8 @@ void ADS124X_init(SPI_HandleTypeDef *hspi,
  * @param voltage value of voltage from resistance
  * @return int32_t the value of the temperature
  */
-int32_t RTD_Converter(int32_t resistance){
-	int32_t temp;
+float RTD_Converter(int32_t resistance){
+	float temp;
 
 	// Temperatures above 0 degrees using pt100
 	if((resistance >= pt100_R0) && (resistance <= 1000)){
@@ -89,7 +89,7 @@ int32_t RTD_Converter(int32_t resistance){
 	return temp;
 }
 
-int32_t Temperature(SPI_HandleTypeDef *hspi,
+float Temperature(SPI_HandleTypeDef *hspi,
         GPIO_TypeDef *GPIO_CS, uint16_t PIN_CS){
 
 	int8_t data[3];
@@ -104,7 +104,7 @@ int32_t Temperature(SPI_HandleTypeDef *hspi,
 
 	uint8_t rdatacmd = 0x12;
 	HAL_SPI_Transmit(hspi, &rdatacmd, 1, HAL_MAX_DELAY);
-	HAL_SPI_Receive(hspi, &data, 3, HAL_MAX_DELAY);
+	HAL_SPI_Receive(hspi, (uint8_t *)data, 3, HAL_MAX_DELAY);
 
 	HAL_Delay(1);
 	HAL_GPIO_WritePin(GPIO_CS, PIN_CS, GPIO_PIN_SET);

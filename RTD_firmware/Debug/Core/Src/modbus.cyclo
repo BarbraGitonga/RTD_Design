@@ -1,2 +1,2 @@
 ../Core/Src/modbus.c:11:9:ProcessModbusFrame	8
-../Core/Src/modbus.c:49:6:Modbus_SendException	1
+../Core/Src/modbus.c:52:6:Modbus_SendException	1

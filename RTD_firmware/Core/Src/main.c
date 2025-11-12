@@ -55,7 +55,7 @@ uint8_t transfer_complete = 0;
 volatile uint16_t modbus_rx_len = 0;
 uint8_t mb_rx_buffer[MB_RX_BUF_SIZE];
 uint8_t mb_tx_buffer[MB_TX_BUF_SIZE];
-uint16_t modbusInputRegisters[2];
+uint16_t modbusInputRegisters[0];
 uint8_t status;
 float temp;
 
@@ -151,14 +151,18 @@ int main(void)
   while (1)
   {
 	  if(drdy_flag == 1){
-		  modbusInputRegisters[0] = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
+		  float temp = Temperature(&hspi1, GPIOA, GPIO_PIN_14);
+		  modbusInputRegisters[0] = (uint16_t)(temp * 100); // Convert to integer
 		  drdy_flag = 0;
 	  }
 
 	  if(transfer_complete){
 		  // Process the Modbus frame
 		  status = ProcessModbusFrame(mb_rx_buffer, modbus_rx_len, mb_tx_buffer, modbusInputRegisters);
-		  if (status != 0){
+		  if (status == CRC_ERROR){
+			  // discard message
+		  }
+		  if ((status != 0) && (status != CRC_ERROR)){
 			  Modbus_SendException(mb_rx_buffer[1], mb_tx_buffer, status);
 
 			  RS485_SetTransmit();

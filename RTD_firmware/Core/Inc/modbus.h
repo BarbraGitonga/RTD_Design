@@ -15,13 +15,8 @@
 #define ILLEGAL_FUNCTION       0x01
 #define ILLEGAL_DATA_ADDRESS   0x02
 #define ILLEGAL_DATA_VALUE     0x03
-#define SLAVE_DEVICE_FALIURE   0x04
+#define CRC_ERROR     		   0x04
 
-enum {
-	REG_TEMP = 0,
-	REG_FAULT,
-	REG_COUNT
-};
 void RS485_SetTransmit(void);
 void RS485_SetReceive(void);
 uint8_t ProcessModbusFrame(uint8_t *rx, uint16_t len, uint8_t *response, uint16_t* mb_input_reg);

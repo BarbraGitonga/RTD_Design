@@ -1,78 +1,21 @@
-ERC report (2026-08-05T15:27:36+0300, Encoding UTF8)
+ERC report (2026-08-05T18:06:00+0300, Encoding UTF8)
 
 ***** Sheet /
-[unannotated]: Item not annotated: CAN_Term?
-    ; error
-    @(3300 mils, 3950 mils): Symbol CAN_Term [Screw_Terminal_01x03]
 [lib_symbol_issues]: The current configuration does not include the symbol library 'Mux_Analog'
     ; warning
     @(3800 mils, 3150 mils): Symbol U3 [ADG706]
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 4450 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 5150 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 5550 mils): Vertical Wire, length 50 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 5850 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 6550 mils): Vertical Wire, length 200 mils
 [lib_symbol_issues]: The current configuration does not include the symbol library 'Mux_Analog'
     ; warning
     @(6850 mils, 3100 mils): Symbol U4 [ADG706]
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3100 mils, 7250 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 7950 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 8650 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 9350 mils): Vertical Wire, length 200 mils
 [lib_symbol_issues]: The current configuration does not include the symbol library 'Mux_Analog'
     ; warning
     @(10450 mils, 3150 mils): Symbol U5 [ADG706]
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 10750 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 11450 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 12150 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 12850 mils): Vertical Wire, length 200 mils
 [lib_symbol_issues]: The current configuration does not include the symbol library 'Mux_Analog'
     ; warning
     @(13300 mils, 3150 mils): Symbol U6 [ADG706]
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 13550 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 14300 mils): Vertical Wire, length 200 mils
-[unconnected_wire_endpoint]: Unconnected wire endpoint
-    ; warning
-    @(3150 mils, 15050 mils): Vertical Wire, length 200 mils
 [lib_symbol_issues]: The symbol library 'ADC_SIGMA_DELTA_TI_ADS' was not found at 'C:/Users/lenovo/Desktop/RTD_Design/RTD/ADC_SIGMA_DELTA_TI_ADS.kicad_sym'.
     ; warning
     @(16350 mils, 2400 mils): Symbol ADS1 [ADS1248]
-[lib_symbol_mismatch]: Symbol '+3.3VA' doesn't match copy in library 'power'
-    ; warning
-    @(3850 mils, 1050 mils): Symbol #PWR054 [+3.3VA]
-[lib_symbol_mismatch]: Symbol 'STM32F103C8Tx' doesn't match copy in library 'MCU_ST_STM32F1'
-    ; warning
-    @(3550 mils, 3100 mils): Symbol U7 [STM32F103C8Tx]
 [lib_symbol_issues]: The symbol library 'DC_DC_CONVERTER_XP_POWER_SDT' was not found at 'C:/Users/lenovo/Desktop/RTD_Design/RTD/DC_DC_CONVERTER_XP_POWER_SDT.kicad_sym'.
     ; warning
     @(3100 mils, 1700 mils): Symbol SDT1 [SDT01F24D3V3]
@@ -80,52 +23,11 @@ ERC report (2026-08-05T15:27:36+0300, Encoding UTF8)
 ***** Sheet /MCU/
 
 ***** Sheet /Comms_Interface/
-[pin_not_connected]: Pin not connected
-    ; error
-    @(1550 mils, 1000 mils): Symbol U1 Pin 8 [VCC, Power input, Line]
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(1900 mils, 3550 mils): Symbol #FLG09 Pin 1 [Power output, Line]
-    @(3450 mils, 1600 mils): Symbol SDT1 Pin 4 [+VOUT, Power output, Line]
-[multiple_net_names]: Both A and B are attached to the same items; A will be used in the netlist
-    ; warning
-    @(2000 mils, 1800 mils): Label 'A'
-    @(2050 mils, 1500 mils): Label 'B'
 
 ***** Sheet /Analog_Front_End/
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(2900 mils, 3200 mils): Symbol #FLG03 Pin 1 [Power output, Line]
-    @(6050 mils, 3150 mils): Symbol #FLG05 Pin 1 [Power output, Line]
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(6050 mils, 3150 mils): Symbol #FLG05 Pin 1 [Power output, Line]
-    @(9450 mils, 3200 mils): Symbol #FLG08 Pin 1 [Power output, Line]
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(9450 mils, 3200 mils): Symbol #FLG08 Pin 1 [Power output, Line]
-    @(3450 mils, 1600 mils): Symbol SDT1 Pin 4 [+VOUT, Power output, Line]
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(12450 mils, 3200 mils): Symbol #FLG07 Pin 1 [Power output, Line]
-    @(9450 mils, 3200 mils): Symbol #FLG08 Pin 1 [Power output, Line]
-[pin_not_driven]: Input pin not driven by any Output pins
-    ; error
-    @(15800 mils, 2050 mils): Symbol ADS1 Pin 11 [AIN0/EXC, Input, Line]
-[pin_not_driven]: Input pin not driven by any Output pins
-    ; error
-    @(15800 mils, 2150 mils): Symbol ADS1 Pin 12 [AIN1/EXC, Input, Line]
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(17250 mils, 2900 mils): Symbol ADS1 Pin 10 [VREFCOM, Power output, Line]
-    @(15150 mils, 3150 mils): Symbol U6 Pin 12 [GND, Power output, Line]
 
 ***** Sheet /Power_Supply/
-[pin_to_pin]: Pins of type Power output and Power output are connected
-    ; error
-    @(3450 mils, 1800 mils): Symbol SDT1 Pin 3 [-VOUT, Power output, Line]
-    @(15150 mils, 3150 mils): Symbol U6 Pin 12 [GND, Power output, Line]
 
 ***** Sheet /Non_Volatile_Memory/
 
- ** ERC messages: 36  Errors 11  Warnings 25
+ ** ERC messages: 6  Errors 0  Warnings 6

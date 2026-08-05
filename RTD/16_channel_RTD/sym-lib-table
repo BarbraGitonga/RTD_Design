@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "ADC_SIGMA_DELTA_TI_ADS")(type "KiCad")(uri "C:/Users/lenovo/Desktop/RTD_Design/RTD/ADC_SIGMA_DELTA_TI_ADS.kicad_sym")(options "")(descr ""))
   (lib (name "DC_DC_CONVERTER_XP_POWER_SDT")(type "KiCad")(uri "C:/Users/lenovo/Desktop/RTD_Design/RTD/DC_DC_CONVERTER_XP_POWER_SDT.kicad_sym")(options "")(descr ""))
+  (lib (name "ANALOG_MUX_AL")(type "KiCad")(uri "${KIPRJMOD}/ANALOG_MUX_AL.kicad_sym")(options "")(descr ""))
 )
